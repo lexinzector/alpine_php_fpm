@@ -1,2 +1,2 @@
 # alpine_php_fpm
-Alpine php-fpm docker image
+Custom docker container for alpine_php_fpm
