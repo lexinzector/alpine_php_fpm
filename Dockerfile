@@ -19,11 +19,9 @@ RUN cd ~; \
 
 RUN cd ~; \
 	mkdir -p /usr/share/GeoIP && cd /usr/share/GeoIP/; \
-	
 	wget https://dl.miyuru.lk/geoip/maxmind/city/maxmind.dat.gz -O GeoLiteCity.dat.gz; \
 	gzip -d GeoLiteCity.dat.gz; \
 	mv maxmind.dat GeoLiteCity.dat; \
-	
 	wget https://dl.miyuru.lk/geoip/maxmind/country/maxmind.dat.gz -O GeoIP.dat.gz; \
 	gzip -d GeoIP.dat.gz; \
 	mv maxmind.dat GeoIP.dat; \
