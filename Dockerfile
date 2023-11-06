@@ -1,12 +1,12 @@
 ARG ARCH=
-FROM bayrell/alpine_php_fpm:7.4-10${ARCH}
+FROM bayrell/alpine_php_fpm:8.0-2${ARCH}
 
 ARG APT_MIRROR
 
 RUN cd ~; \
 	apk update; \
 	apt upgrade; \
-	apk add php7-tokenizer; \
+	apk add php8-tokenizer; \
 	echo 'Ok'
 
 RUN cd ~; \
