@@ -13,7 +13,8 @@ TAG=`date '+%Y%m%d_%H%M%S'`
 case "$1" in
 	
 	test)
-		docker build ./ -t lexinzector/$IMAGE_NAME:$VERSION-$SUBVERSION-$TAG --file Dockerfile
+		docker build ./ -t lexinzector/$IMAGE_NAME:$VERSION-$SUBVERSION-$TAG \
+			--file Dockerfile --build-arg ARCH=-arm32v7
 	;;
 	
 	amd64)
