@@ -1,5 +1,5 @@
 ARG ARCH=
-FROM bayrell/alpine_php_fpm:7.4-10${ARCH}
+FROM bayrell/alpine_php_fpm:7.4-11${ARCH}
 
 ARG APT_MIRROR
 
