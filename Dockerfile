@@ -9,4 +9,4 @@ RUN cd ~; \
 	apk add php8-tokenizer; \
 	echo 'Ok'
 
-RUN echo "* * * * * cd /var/www/html/api && php artisan schedule:run >> /dev/null 2>&1" >> /etc/crontabs/root
+ADD files /
