@@ -8,5 +8,3 @@ RUN cd ~; \
 	apt upgrade; \
 	apk add php8-tokenizer; \
 	echo 'Ok'
-
-ADD files /
