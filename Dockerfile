@@ -11,7 +11,7 @@ RUN cd ~; \
 
 RUN cd ~; \
 	apk update; \
-	apk add php5 php5-fpm php5-json php5-openssl php5-pdo_mysql php5-curl php5-phar php5-bcmath php5-sockets php5-mysqli php5-soap php5-ctype php5-iconv php5-dom curl nginx mysql-client; \
+	apk add php5 php5-fpm php5-json php5-openssl php5-pdo_mysql php5-curl php5-phar php5-bcmath php5-sockets php5-mysqli php5-soap php5-ctype php5-iconv php5-dom php5-gd php5-mysql php5-exif php5-zip php5-xml php5-xmlreader php5-opcache php5-apcu php5-mcrypt php5-intl php5-pdo_mysql php5-pdo_sqlite php5-sqlite3 php5-pgsql php5-cgi php5-embed php5-xmlrpc php5-dbg php5-sysvshm php5-imap php5-doc php5-common php5-calendar php5-pdo_dblib php5-dba php5-odbc php5-shmop php5-wddx php5-cli php5-suhosin php5-phpdbg php5-bz2 php5-sysvmsg php5-pspell php5-dev php5-ftp php5-gettext php5-mssql php5-pcntl php5-pear php5-pdo_pgsql php5-pdo php5-sysvsem php5-posix php5-xsl php5-ldap php5-pdo_odbc php5-enchant php5-gmp php5-snmp curl nginx mysql-client; \
 	rm -rf /var/cache/apk/*; \
 	addgroup -g 1000 -S www; \
 	adduser -D -H -S -G www -u 1000 www; \
