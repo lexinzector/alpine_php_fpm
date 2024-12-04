@@ -14,22 +14,22 @@ case "$1" in
 	
 	test)
 		docker build ./ -t lexinzector/$IMAGE_NAME:$VERSION-$SUBVERSION-$TAG \
-			--file Dockerfile --build-arg ARCH=-arm32v7
+			--file Dockerfile --build-arg ARCH=arm32v7
 	;;
 	
 	amd64)
 		docker build ./ -t lexinzector/$IMAGE_NAME:$VERSION-$SUBVERSION-amd64 \
-			--file Dockerfile --build-arg ARCH=-amd64
+			--file Dockerfile --build-arg ARCH=amd64
 	;;
 	
 	arm64v8)
 		docker build ./ -t lexinzector/$IMAGE_NAME:$VERSION-$SUBVERSION-arm64v8 \
-			--file Dockerfile --build-arg ARCH=-arm64v8
+			--file Dockerfile --build-arg ARCH=arm64v8
 	;;
 	
 	arm32v7)
 		docker build ./ -t lexinzector/$IMAGE_NAME:$VERSION-$SUBVERSION-arm32v7 \
-			--file Dockerfile --build-arg ARCH=-arm32v7
+			--file Dockerfile --build-arg ARCH=arm32v7
 	;;
 	
 	manifest)

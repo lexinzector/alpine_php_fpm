@@ -1,17 +1,25 @@
 ARG ARCH=
-FROM docker.io/bayrell/alpine:3.14${ARCH}
+FROM ${ARCH}/alpine:3.14
 
 RUN cd ~; \
 	apk update; \
 	apk upgrade; \
+	apk add bash nano mc wget net-tools pv zip unzip supervisor procps grep sudo; \
+	rm -rf /var/cache/apk/*; \
+	echo "export EDITOR=nano" > /etc/profile.d/editor_nano; \
+	echo "Ok"
+
+RUN cd ~; \
+	apk update; \
 	apk add php5 php5-fpm php5-json php5-openssl php5-pdo_mysql php5-curl php5-phar php5-bcmath php5-sockets php5-mysqli php5-soap php5-ctype php5-iconv php5-dom php5-gd curl nginx mysql-client; \
 	rm -rf /var/cache/apk/*; \
-	addgroup -g 800 -S www; \
-	adduser -D -H -S -G www -u 800 -h /data/home www; \
+	addgroup -g 1000 -S www; \
+	adduser -D -H -S -G www -u 1000 www; \
 	adduser nginx www; \
 	chown -R www:www /var/log/nginx; \
+	rm -rf /var/cache/apk/*; \
 	echo 'Ok'
-	
+
 RUN cd ~; \
 	sed -i 's|;date.timezone =.*|date.timezone = UTC|g' /etc/php5/php.ini; \
 	sed -i 's|short_open_tag =.*|short_open_tag = On|g' /etc/php5/php.ini; \
@@ -39,16 +47,17 @@ RUN cd ~; \
 	ln -sf /proc/1/fd/2 /var/log/nginx/php_error.log; \
 	ln -sf /proc/1/fd/2 /var/log/nginx/error.log; \
 	echo 'Ok'
-	
+
 ADD files /src/files
 RUN cd ~; \
 	rm -f /etc/nginx/conf.d/default.conf; \
-	rm -f /etc/nginx/fastcgi.conf; \
 	cp -rf /src/files/etc/* /etc/; \
 	cp -rf /src/files/root/* /root/; \
 	cp -rf /src/files/usr/* /usr/; \
 	cp -rf /src/files/var/* /var/; \
 	rm -rf /src/files; \
-	chmod -R www:www /var/www; \
 	chmod +x /root/run.sh; \
 	echo 'Ok'
+
+CMD ["/root/run.sh"]
+
