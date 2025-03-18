@@ -1,80 +1,78 @@
 #!/bin/bash
 
-SCRIPT=$(readlink -f $0)
-SCRIPT_PATH=`dirname $SCRIPT`
-BASE_PATH=`dirname $SCRIPT_PATH`
+SCRIPT=$(readlink -f "$0")
+SCRIPT_PATH=$(dirname "$SCRIPT")
+BASE_PATH=$(dirname "$SCRIPT_PATH")
 
 RETVAL=0
 VERSION=7.4
 SUBVERSION=12
 IMAGE="alpine_php_fpm"
-TAG=`date '+%Y%m%d_%H%M%S'`
+TAG=$(date '+%Y%m%d_%H%M%S')
+
+REGISTRY="docker.io/lexinzector"
+
+# Функция сборки и пуша конкретной архитектуры
+build_and_push() {
+    local PLATFORM=$1
+    local ARCH=$2
+    local FULL_TAG="$REGISTRY/$IMAGE:$VERSION-$SUBVERSION-$ARCH"
+
+    echo "Building for $PLATFORM ($ARCH)..."
+    docker buildx build --platform "$PLATFORM" -t "$FULL_TAG" --file Dockerfile . --push
+
+    echo "Adding $ARCH to manifest..."
+    docker buildx imagetools create --tag "$FULL_TAG" "$FULL_TAG"
+}
+
+# Функция создания окончательного манифеста
+create_manifest() {
+    echo "Creating and pushing multi-arch manifest..."
+    docker buildx imagetools create \
+        -t "$REGISTRY/$IMAGE:$VERSION-$SUBVERSION" \
+        "$REGISTRY/$IMAGE:$VERSION-$SUBVERSION-amd64" \
+        "$REGISTRY/$IMAGE:$VERSION-$SUBVERSION-arm64v8" \
+        "$REGISTRY/$IMAGE:$VERSION-$SUBVERSION-arm32v7"
+
+    docker buildx imagetools create \
+        -t "$REGISTRY/$IMAGE:$VERSION" \
+        "$REGISTRY/$IMAGE:$VERSION-$SUBVERSION-amd64" \
+        "$REGISTRY/$IMAGE:$VERSION-$SUBVERSION-arm64v8" \
+        "$REGISTRY/$IMAGE:$VERSION-$SUBVERSION-arm32v7"
+}
 
 case "$1" in
-	
-	test)
-		docker build ./ -t lexinzector/$IMAGE:$VERSION-$SUBVERSION-$TAG \
-			--file Dockerfile
-	;;
-	
-	amd64)
-		export DOCKER_DEFAULT_PLATFORM=linux/amd64
-		docker build ./ -t lexinzector/$IMAGE:$VERSION-$SUBVERSION-amd64 \
-			--file Dockerfile --build-arg ARCH=amd64/
-	;;
-	
-	arm64v8)
-		export DOCKER_DEFAULT_PLATFORM=linux/arm64/v8
-		docker build ./ -t lexinzector/$IMAGE:$VERSION-$SUBVERSION-arm64v8 \
-			--file Dockerfile --build-arg ARCH=arm64v8/
-	;;
-	
-	arm32v7)
-		export DOCKER_DEFAULT_PLATFORM=linux/arm32/v7
-		docker build ./ -t lexinzector/$IMAGE:$VERSION-$SUBVERSION-arm32v7 \
-			--file Dockerfile --build-arg ARCH=arm32v7/
-	;;
-	
-	manifest)
-		rm -rf ~/.docker/manifests/docker.io_lexinzector_$IMAGE_NAME-*
-		
-		docker tag lexinzector/$IMAGE:$VERSION-$SUBVERSION-amd64 lexinzector/$IMAGE:$VERSION-amd64
-		docker tag lexinzector/$IMAGE:$VERSION-$SUBVERSION-arm64v8 lexinzector/$IMAGE:$VERSION-arm64v8
-		docker tag lexinzector/$IMAGE:$VERSION-$SUBVERSION-arm32v7 lexinzector/$IMAGE:$VERSION-arm32v7
-		
-		docker push lexinzector/$IMAGE:$VERSION-$SUBVERSION-amd64
-		docker push lexinzector/$IMAGE:$VERSION-$SUBVERSION-arm64v8
-		docker push lexinzector/$IMAGE:$VERSION-$SUBVERSION-arm32v7
-		
-		docker push lexinzector/$IMAGE:$VERSION-amd64
-		docker push lexinzector/$IMAGE:$VERSION-arm64v8
-		docker push lexinzector/$IMAGE:$VERSION-arm32v7
-		
-		docker manifest create lexinzector/$IMAGE:$VERSION-$SUBVERSION \
-			--amend lexinzector/$IMAGE:$VERSION-$SUBVERSION-amd64 \
-			--amend lexinzector/$IMAGE:$VERSION-$SUBVERSION-arm64v8 \
-			--amend lexinzector/$IMAGE:$VERSION-$SUBVERSION-arm32v7
-		docker manifest push lexinzector/$IMAGE:$VERSION-$SUBVERSION
-		
-		docker manifest create lexinzector/$IMAGE:$VERSION \
-			--amend lexinzector/$IMAGE:$VERSION-amd64 \
-			--amend lexinzector/$IMAGE:$VERSION-arm64v8 \
-			--amend lexinzector/$IMAGE:$VERSION-arm32v7
-		docker manifest push lexinzector/$IMAGE:$VERSION
-	;;
-	
-	all)
-		$0 amd64
-		$0 arm64v8
-		$0 arm32v7
-		$0 manifest
-	;;
-	
-	*)
-		echo "Usage: $0 {amd64|arm64v8|arm32v7|manifest|all|test}"
-		RETVAL=1
+
+    test)
+        docker buildx build --platform linux/amd64 \
+            -t "$REGISTRY/$IMAGE:$VERSION-$SUBVERSION-$TAG" \
+            --file Dockerfile .
+    ;;
+
+    amd64)
+        build_and_push "linux/amd64" "amd64"
+    ;;
+
+    arm64v8)
+        build_and_push "linux/arm64/v8" "arm64v8"
+    ;;
+
+    arm32v7)
+        build_and_push "linux/arm/v7" "arm32v7"
+    ;;
+
+    all)
+        $0 amd64
+        $0 arm64v8
+        $0 arm32v7
+        create_manifest
+    ;;
+
+    *)
+        echo "Usage: $0 {amd64|arm64v8|arm32v7|all|test}"
+        RETVAL=1
+    ;;
 
 esac
 
 exit $RETVAL
-
