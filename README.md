@@ -9,14 +9,14 @@ Branches:
 
 ## Environments
 
-- ANY_PHP=0 - Enable human url
-- ANY_PHP=1 - Enable access by direct php file
-- CRON_ENABLE=1 - Enable cron
-- TZ=UTC
-- DOCUMENT_ROOT=/var/www/html - Setup document root folder
-- MYSQL_HOST, MYSQL_LOGIN, MYSQL_PASSWORD, MYSQL_DATABASE - MySQL settings
-- WWW_UID, WWW_GID - Setup www user and group id
-- MAX_UPLOAD_SIZE - Setup max upload size
-- MEMORY_LIMIT  - Setup php memory limit
-- PHP_TIME_LIMIT - Setup php time limit
-- POST_MAX_SIZE - Setup post max size
+- `ANY_PHP=0` - Enable human url
+- `ANY_PHP=1` - Enable access by direct php file
+- `CRON_ENABLE=1` - Enable cron
+- `TZ=UTC`
+- `DOCUMENT_ROOT=/var/www/html` - Setup document root folder
+- `MYSQL_HOST`, `MYSQL_LOGIN`, `MYSQL_PASSWORD`, `MYSQL_DATABASE` - MySQL settings
+- `WWW_UID`, `WWW_GID` - Setup www user and group id
+- `MAX_UPLOAD_SIZE` - Setup max upload size
+- `MEMORY_LIMIT`  - Setup php memory limit
+- `PHP_TIME_LIMIT` - Setup php time limit
+- `POST_MAX_SIZE` - Setup post max size
