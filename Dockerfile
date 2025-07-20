@@ -33,6 +33,10 @@ RUN cd ~; \
 	sed -i 's|group = .*|group = www|g' /etc/php83/php-fpm.d/www.conf; \
 	sed -i 's|;clear_env =.*|clear_env = no|g' /etc/php83/php-fpm.d/www.conf; \
 	sed -i 's|;catch_workers_output =.*|catch_workers_output = yes|g' /etc/php83/php-fpm.d/www.conf; \
+	sed -i 's/^pm.max_children\s*=.*/pm.max_children = 20/' /etc/php83/php-fpm.d/www.conf; \
+	sed -i 's/^pm.start_servers\s*=.*/pm.start_servers = 5/' /etc/php83/php-fpm.d/www.conf; \
+	sed -i 's/^pm.min_spare_servers\s*=.*/pm.min_spare_servers = 5/' /etc/php83/php-fpm.d/www.conf; \
+	sed -i 's/^pm.max_spare_servers\s*=.*/pm.max_spare_servers = 10/' /etc/php83/php-fpm.d/www.conf; \
 	echo 'php_admin_value[error_log] = /dev/stderr' >> /etc/php83/php-fpm.d/www.conf; \
 	echo 'php_admin_value[memory_limit] = 128M' >> /etc/php83/php-fpm.d/www.conf; \
 	echo 'php_admin_value[post_max_size] = 128M' >> /etc/php83/php-fpm.d/www.conf; \
