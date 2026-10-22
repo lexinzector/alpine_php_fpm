@@ -1,5 +1,5 @@
 ARG ARCH=
-FROM ${ARCH}alpine:3.20
+FROM ${ARCH}alpine:3.24
 
 RUN cd ~; \
 	apk update --no-cache; \
@@ -23,7 +23,7 @@ RUN cd ~; \
 	sed -i 's|;date.timezone =.*|date.timezone = UTC|g' /etc/php83/php.ini; \
 	sed -i 's|short_open_tag =.*|short_open_tag = On|g' /etc/php83/php.ini; \
 	sed -i 's|display_errors =.*|display_errors = On|g' /etc/php83/php.ini; \
-	sed -i 's|error_reporting =.*|display_errors = E_ALL|g' /etc/php83/php.ini; \
+	sed -i 's|error_reporting =.*|error_reporting = E_ALL|g' /etc/php83/php.ini; \
 	sed -i 's|;error_log =.*|error_log = /dev/stderr|g' /etc/php83/php.ini; \
 	sed -i 's|listen =.*|listen = /var/run/php-fpm.sock|g' /etc/php83/php-fpm.d/www.conf; \
 	sed -i 's|;listen.owner =.*|listen.owner = nginx|g' /etc/php83/php-fpm.d/www.conf; \
